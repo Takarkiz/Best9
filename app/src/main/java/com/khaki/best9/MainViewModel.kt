@@ -9,8 +9,7 @@ import com.khaki.best9.repositoryImpl.DummyAlbumSearchRepositoryImpl
 import com.khaki.best9.ui.model.AlbumUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -26,7 +25,15 @@ class MainViewModel(
     fun searchAlbums(query: String) {
         viewModelScope.launch {
             searchRepository.searchAlbums(query)
-                .onEach { albums ->
+                .onStart {
+                    _bottomSheetUiState.update {
+                        it.copy(
+                            isLoading = true,
+                            searchQuery = query,
+                        )
+                    }
+                }
+                .collect { albums ->
                     val uiModels = albums.map {
                         AlbumUiModel(
                             id = it.id,
@@ -43,7 +50,6 @@ class MainViewModel(
                         )
                     }
                 }
-                .launchIn(viewModelScope)
         }
     }
 

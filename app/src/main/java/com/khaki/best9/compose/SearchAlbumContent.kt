@@ -2,11 +2,9 @@ package com.khaki.best9.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import com.khaki.best9.ui.model.AlbumUiModelPreviewProvider
 @Composable
 fun SearchAlbumContent(
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     searchResults: List<AlbumUiModel>,
     onClickResultItem: (Long) -> Unit = {},
     onClickSearchAction: (String) -> Unit = {},
@@ -41,37 +40,13 @@ fun SearchAlbumContent(
             color = MaterialTheme.colorScheme.onBackground,
         )
 
-        if (searchResults.isEmpty()) {
-            Text(
-                text = "検索結果がありません",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-        } else {
-
-            LazyColumn {
-
-                item {
-                    Divider()
-                }
-
-                itemsIndexed(searchResults) { index, album ->
-                    SearchResultItem(
-                        modifier = Modifier,
-                        albumUiModel = album,
-                        onClick = {
-                            onClickResultItem(album.id)
-                        },
-                    )
-
-                    if (index < searchResults.size) {
-                        Divider(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        )
-                    }
-                }
-            }
-        }
+        SearchResultContent(
+            modifier = Modifier
+                .fillMaxWidth(),
+            isLoading = isLoading,
+            searchResult = searchResults,
+            onClickResultItem = onClickResultItem,
+        )
 
         SearchForm(
             modifier = Modifier
