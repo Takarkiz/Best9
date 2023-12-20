@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,10 +34,9 @@ fun SearchForm(
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
-        TextField(
+        OutlinedTextField(
             modifier = Modifier
-                .weight(1f)
-                .clip(MaterialTheme.shapes.large),
+                .weight(1f),
             value = searchWord,
             onValueChange = {
                 searchWord = it
