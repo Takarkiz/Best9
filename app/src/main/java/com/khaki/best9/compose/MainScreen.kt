@@ -73,6 +73,7 @@ fun MainScreen(
             ) {
                 SearchAlbumContent(
                     searchResults = bottomSheetUiState.searchResults,
+                    isLoading = bottomSheetUiState.isLoading,
                     onClickResultItem = { id ->
                         onClickSearchItem(id)
                     },

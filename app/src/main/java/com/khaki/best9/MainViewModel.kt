@@ -9,7 +9,6 @@ import com.khaki.best9.repositoryImpl.DummyAlbumSearchRepositoryImpl
 import com.khaki.best9.ui.model.AlbumUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -23,33 +22,40 @@ class MainViewModel(
     fun bottomSheetUiState() = _bottomSheetUiState.asStateFlow()
 
     fun searchAlbums(query: String) {
+        _bottomSheetUiState.update {
+            it.copy(
+                isLoading = true,
+            )
+        }
         viewModelScope.launch {
-            searchRepository.searchAlbums(query)
-                .onStart {
-                    _bottomSheetUiState.update {
-                        it.copy(
-                            isLoading = true,
-                            searchQuery = query,
-                        )
-                    }
+            runCatching {
+                searchRepository.searchAlbums(query)
+            }.onSuccess { albums ->
+                val uiModels = albums.map {
+                    AlbumUiModel(
+                        id = it.id,
+                        title = it.title,
+                        artist = it.artist,
+                        albumArtUrl = it.albumArtUrl,
+                        releaseMonth = it.releaseMonth.format(DateTimeFormatter.ISO_DATE),
+                    )
                 }
-                .collect { albums ->
-                    val uiModels = albums.map {
-                        AlbumUiModel(
-                            id = it.id,
-                            title = it.title,
-                            artist = it.artist,
-                            albumArtUrl = it.albumArtUrl,
-                            releaseMonth = it.releaseMonth.format(DateTimeFormatter.ISO_DATE),
-                        )
-                    }
-                    _bottomSheetUiState.update {
-                        it.copy(
-                            searchResults = uiModels,
-                            searchQuery = query,
-                        )
-                    }
+                _bottomSheetUiState.update {
+                    it.copy(
+                        searchResults = uiModels,
+                        searchQuery = query,
+                        isLoading = false,
+                    )
                 }
+            }.onFailure {
+                _bottomSheetUiState.update {
+                    it.copy(
+                        searchResults = emptyList(),
+                        searchQuery = query,
+                        isLoading = false,
+                    )
+                }
+            }
         }
     }
 
