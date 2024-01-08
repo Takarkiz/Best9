@@ -16,10 +16,11 @@ import java.time.format.DateTimeFormatter
 class MainViewModel(
     private val searchRepository: AlbumSearchRepository,
 ) : ViewModel() {
+    fun bottomSheetUiState() = _bottomSheetUiState.asStateFlow()
 
     private val _bottomSheetUiState = MutableStateFlow(BottomSheetUiState())
 
-    fun bottomSheetUiState() = _bottomSheetUiState.asStateFlow()
+    private val selectedAlbums: MutableList<Long> = mutableListOf()
 
     fun searchAlbums(query: String) {
         _bottomSheetUiState.update {
@@ -38,6 +39,7 @@ class MainViewModel(
                         artist = it.artist,
                         albumArtUrl = it.albumArtUrl,
                         releaseMonth = it.releaseMonth.format(DateTimeFormatter.ISO_DATE),
+                        isSelected = selectedAlbums.contains(it.id),
                     )
                 }
                 _bottomSheetUiState.update {
@@ -56,6 +58,23 @@ class MainViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun selectSearchResult(id: Long) {
+        selectedAlbums.add(id)
+        _bottomSheetUiState.update {
+            it.copy(
+                searchResults = it.searchResults.map { album ->
+                    if (album.id == id) {
+                        album.copy(
+                            isSelected = true,
+                        )
+                    } else {
+                        album
+                    }
+                }
+            )
         }
     }
 

@@ -18,10 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +35,6 @@ import com.khaki.best9.ui.model.AlbumUiModelPreviewProvider
 fun SearchResultItem(
     modifier: Modifier,
     albumUiModel: AlbumUiModel,
-    isSelected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
 
@@ -50,7 +46,7 @@ fun SearchResultItem(
                 indication = rememberRipple()
             )
             .padding(
-                vertical = 8.dp,
+                vertical = 12.dp,
                 horizontal = 16.dp,
             ),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -58,7 +54,7 @@ fun SearchResultItem(
     ) {
         AsyncImage(
             modifier = Modifier
-                .size(80.dp)
+                .size(72.dp)
                 .clip(shape = MaterialTheme.shapes.small),
             model = albumUiModel.albumArtUrl,
             placeholder = rememberVectorPainter(image = Icons.Default.Photo),
@@ -72,10 +68,10 @@ fun SearchResultItem(
             ) {
             Text(
                 text = albumUiModel.title,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
+                maxLines = 2,
             )
             Text(
                 text = albumUiModel.artist,
@@ -87,7 +83,7 @@ fun SearchResultItem(
         }
 
         Crossfade(
-            targetState = isSelected,
+            targetState = albumUiModel.isSelected,
             label = "追加時アニメーション",
             animationSpec = tween(
                 durationMillis = 500,
@@ -121,14 +117,10 @@ fun SearchResultItemPreview(
     @PreviewParameter(AlbumUiModelPreviewProvider::class) item: AlbumUiModel,
 ) {
 
-    var rememberCheckState by remember { mutableStateOf(false) }
-
-    SearchResultItem(
-        modifier = Modifier,
-        albumUiModel = item,
-        isSelected = rememberCheckState,
-        onClick = {
-            rememberCheckState = !rememberCheckState
-        }
-    )
+    MaterialTheme {
+        SearchResultItem(
+            modifier = Modifier,
+            albumUiModel = item,
+        )
+    }
 }

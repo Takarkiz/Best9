@@ -10,6 +10,7 @@ data class AlbumUiModel(
     val artist: String,
     val albumArtUrl: String,
     val releaseMonth: String,
+    val isSelected: Boolean,
 )
 
 class AlbumUiModelPreviewProvider : PreviewParameterProvider<AlbumUiModel> {
@@ -21,6 +22,7 @@ class AlbumUiModelPreviewProvider : PreviewParameterProvider<AlbumUiModel> {
                 artist = "artist",
                 albumArtUrl = "https://via.placeholder.com/150",
                 releaseMonth = "2021-01",
+                isSelected = false,
             ),
             AlbumUiModel(
                 id = 2,
@@ -28,6 +30,7 @@ class AlbumUiModelPreviewProvider : PreviewParameterProvider<AlbumUiModel> {
                 artist = "artist",
                 albumArtUrl = "https://via.placeholder.com/150",
                 releaseMonth = "2021-02",
+                isSelected = true
             ),
             AlbumUiModel(
                 id = 3,
@@ -35,6 +38,7 @@ class AlbumUiModelPreviewProvider : PreviewParameterProvider<AlbumUiModel> {
                 artist = "So Long Artist Name & So Long Artist Name & Too Long Artist Name",
                 albumArtUrl = "https://via.placeholder.com/150",
                 releaseMonth = "2021-03",
+                isSelected = false,
             ),
         )
 }

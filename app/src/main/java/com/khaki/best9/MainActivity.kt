@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                         viewModel.searchAlbums(it)
                     },
                     onClickSearchItem = {
-
+                        viewModel.selectSearchResult(it)
                     }
                 )
             }
