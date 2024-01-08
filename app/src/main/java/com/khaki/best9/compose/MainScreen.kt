@@ -1,7 +1,9 @@
 package com.khaki.best9.compose
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -29,7 +31,6 @@ import com.khaki.best9.MainScreenState
 fun MainScreen(
     uiState: MainScreenState,
     bottomSheetUiState: BottomSheetUiState,
-    onClickFAB: () -> Unit = {},
     onClickSearchButton: (String) -> Unit = {},
     onClickSearchItem: (Long) -> Unit = {},
 ) {
@@ -38,7 +39,8 @@ fun MainScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 modifier = Modifier.fillMaxWidth(),
@@ -70,6 +72,7 @@ fun MainScreen(
                     showBottomSheet = false
                 },
                 sheetState = sheetState,
+                windowInsets = WindowInsets.ime,
             ) {
                 SearchAlbumContent(
                     searchResults = bottomSheetUiState.searchResults,
@@ -84,13 +87,6 @@ fun MainScreen(
             }
         }
     }
-}
-
-@Composable
-fun MainContent(
-    modifier: Modifier,
-) {
-
 }
 
 @Preview(
